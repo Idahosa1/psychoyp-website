@@ -116,8 +116,6 @@
   .screen .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,rgba(0,0,0,.55) 45%,rgba(8,8,8,.96) 75%)}
   .screen .ui{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;padding:16px 18px 20px}
   .status{display:flex;justify-content:space-between;align-items:center;font:600 13px/1 -apple-system,'SF Pro Text',system-ui,sans-serif;padding:2px 10px 0;height:30px}
-  .status .ic{display:flex;gap:5px;align-items:center}
-  .status .ic span{display:block;background:#fff;border-radius:2px}
   .np{display:flex;justify-content:space-between;align-items:center;margin:18px 0 16px;font:500 10.5px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7)}
   .cover{position:relative;width:100%;aspect-ratio:1;border-radius:10px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.55);background:var(--tint)}
   .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -268,7 +266,7 @@
 
 <script>
 /* ================= CONTENT (edit here) ================= */
-const ALBUMS = [ // latest -> oldest, max 4
+const ALBUMS = [ // latest -> oldest
   { title:'WELCOME 2 THE VILLE', artist:'Apex Village, PsychoYP', year:'2026', tracks:14, tint:'linear-gradient(135deg,#3a5a2a,#0f1d10)',
     cover:'https://i.scdn.co/image/ab67616d0000b27382593be6ed02078a6e401361', url:'https://open.spotify.com/album/7eHC5xOaA4Y9Bh1rnmwdVY' },
   { title:'YP & Azanti, Vol. 2', artist:'Azanti, PsychoYP', year:'2024', tracks:10, tint:'linear-gradient(135deg,#6b3b1d,#1c0f08)',
@@ -277,6 +275,8 @@ const ALBUMS = [ // latest -> oldest, max 4
     cover:'https://i.scdn.co/image/ab67616d0000b273a383c0bae84688edbf04270d', url:'https://open.spotify.com/album/3n2FErZXaPynvMQcjaceCw' },
   { title:'YPSZN3', artist:'PsychoYP', year:'2022', tracks:15, tint:'linear-gradient(135deg,#5e1d1d,#160707)',
     cover:'https://i.scdn.co/image/ab67616d0000b273a0b6482473d32d258e750db1', url:'https://open.spotify.com/album/18fTwvrwISUL4KJiap0Ekp' },
+  { title:'Euphoria', artist:'PsychoYP', year:'2021', tracks:9, tint:'linear-gradient(135deg,#4a2a6b,#120a1c)',
+    cover:'https://i.scdn.co/image/ab67616d0000b2735b5ab7d47f939b1514f1c18d', url:'https://open.spotify.com/album/4IUsZcu8ZFCA64EYOmwAB8' },
 ];
 const VIDEOS = [ // two most recent
   { id:'s9Da7T3tk0I', title:'WHO BORN THE MAGA', label:'Latest' },
@@ -361,14 +361,14 @@ ALBUMS.forEach((a,i)=>{
   scr.innerHTML = `
     <div class="bgart"><img src="${a.cover}" alt="" onerror="this.remove()"></div><div class="shade"></div>
     <div class="ui">
-      <div class="status"><span>9:41</span><span class="ic"><span style="width:16px;height:9px"></span><span style="width:13px;height:9px;border-radius:5px 5px 0 0"></span><span style="width:22px;height:10px;border-radius:3px"></span></span></div>
+      <div class="status"><span>9:41</span></div>
       <div class="np"><span>${i===0?'Latest release':'Album'}</span><span>${pad(i+1)} / ${pad(N)}</span></div>
       <a class="cover" href="${a.url}" target="_blank" rel="noopener" aria-label="Open ${a.title} on Spotify">
         <span class="fallback">${a.title}</span>
         <img src="${a.cover}" alt="${a.title} cover" onerror="this.remove()">
       </a>
       <div class="meta"><h4>${a.title}</h4><p>${a.artist} · ${a.year} · ${a.tracks} songs</p></div>
-      <div class="bar" style="--prog:${[38,22,61,47][i%4]}%"><i></i></div>
+      <div class="bar" style="--prog:${[38,22,61,47,29][i%5]}%"><i></i></div>
       <div class="times"><span>1:${pad(10+i*9)}</span><span>-2:${pad(31-i*4)}</span></div>
       <div class="ctrls">
         <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
