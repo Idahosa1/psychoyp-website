@@ -41,9 +41,25 @@
   @keyframes wipe{to{transform:scaleX(1)}}
   @keyframes draw{to{stroke-dashoffset:0}}
   @keyframes ink{to{fill-opacity:1;stroke-width:0}}
-  #skip{position:absolute;bottom:28px;right:32px;background:none;border:1px solid var(--y800);color:var(--y700);
-    font:500 12px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:10px 14px;border-radius:99px;cursor:pointer;opacity:.7}
-  #skip:hover{opacity:1;color:var(--y500)}
+  .intro-inner{display:flex;flex-direction:column;align-items:center;gap:36px}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .enter-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;opacity:0;transform:translateY(14px);pointer-events:none;
+    transition:opacity .7s ease, transform .8s cubic-bezier(.2,.8,.2,1)}
+  .enter-wrap.show{opacity:1;transform:none;pointer-events:auto}
+  #enter{position:relative;display:inline-flex;align-items:center;gap:12px;height:56px;padding:0 30px 0 34px;border-radius:99px;cursor:pointer;
+    background:transparent;border:1px solid var(--y500);color:var(--y500);font:800 15px/1 var(--body);letter-spacing:.22em;text-transform:uppercase;
+    overflow:hidden;isolation:isolate;transition:color .35s ease}
+  #enter::before{content:"";position:absolute;inset:0;background:var(--y500);transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.7,0,.2,1);z-index:-1}
+  #enter:hover{color:#1b1b1b}
+  #enter:hover::before{transform:scaleX(1)}
+  #enter:focus-visible,#enterQuiet:focus-visible{outline:2px solid var(--y500);outline-offset:4px}
+  #enter i{font-style:normal;font-size:16px;letter-spacing:0;display:inline-block;animation:bob 1.6s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-3px)}}
+  .enter-wrap.show #enter{animation:pulse 2.4s ease-out 1s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,195,85,.35)}100%{box-shadow:0 0 0 18px rgba(255,195,85,0)}}
+  #enterQuiet{background:none;border:0;color:var(--y800);font:400 13px/1 var(--body);letter-spacing:.04em;cursor:pointer;padding:6px;
+    background-image:linear-gradient(currentColor,currentColor);background-size:0 1px;background-position:0 100%;background-repeat:no-repeat;transition:color .2s,background-size .3s}
+  #enterQuiet:hover{color:var(--y500);background-size:100% 1px}
 
   /* ---------- Hero ---------- */
   #hero{position:relative;height:100vh;min-height:560px;overflow:hidden;background:var(--bg)}
@@ -172,22 +188,28 @@
   .credit{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);font:400 16px/1.2 'Caveat',cursive;color:var(--y800);white-space:nowrap}
 
 
-  /* ---------- Sound toggle ---------- */
-  #sound{position:fixed;right:24px;bottom:24px;z-index:90;display:flex;align-items:center;gap:10px;height:44px;padding:0 16px 0 14px;
+  /* ---------- Sound dock (Spotify) ---------- */
+  #dock{position:fixed;right:24px;bottom:24px;z-index:90;display:flex;flex-direction:column;align-items:flex-end;gap:10px;
+    opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .5s ease, transform .5s cubic-bezier(.2,.8,.2,1)}
+  #dock.show{opacity:1;transform:none;pointer-events:auto}
+  .dock-panel{width:300px;height:80px;border-radius:12px;overflow:hidden;opacity:0;transform:translateY(10px) scale(.96);transform-origin:bottom right;
+    pointer-events:none;transition:opacity .35s ease, transform .45s cubic-bezier(.2,.8,.2,1);box-shadow:0 20px 40px rgba(0,0,0,.55)}
+  #dock.open .dock-panel{opacity:1;transform:none;pointer-events:auto}
+  #spEmbed,#spEmbed iframe{display:block;width:300px;height:80px;border:0;border-radius:12px}
+  #sound{display:flex;align-items:center;gap:10px;height:44px;padding:0 16px 0 14px;
     border-radius:99px;border:1px solid var(--y800);background:rgba(8,8,8,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
-    color:var(--y500);font:500 12px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
-    opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .5s ease, transform .5s cubic-bezier(.2,.8,.2,1), border-color .2s, background .2s}
-  #sound.show{opacity:1;transform:none;pointer-events:auto}
+    color:var(--y500);font:500 12px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:border-color .2s}
   #sound:hover{border-color:var(--y500)}
   #sound .eq{display:flex;align-items:flex-end;gap:2.5px;height:14px}
-  #sound .eq i{width:2.5px;height:3px;background:var(--y500);border-radius:2px;transition:height .3s ease}
+  #sound .eq i{width:2.5px;height:3px;background:var(--y500);border-radius:2px}
   #sound.on .eq i{animation:eq 1s ease-in-out infinite alternate}
   #sound.on .eq i:nth-child(2){animation-duration:.7s;animation-delay:-.2s}
   #sound.on .eq i:nth-child(3){animation-duration:1.2s;animation-delay:-.5s}
   #sound.on .eq i:nth-child(4){animation-duration:.85s;animation-delay:-.1s}
   @keyframes eq{0%{height:3px}100%{height:14px}}
+  #sound .lbl{text-align:left}
   #sound .lbl small{display:block;font:400 10px/1 var(--body);letter-spacing:.06em;color:var(--y700);text-transform:none;margin-top:4px}
-  @media (max-width:600px){ #sound{right:14px;bottom:14px} #sound .lbl small{display:none} }
+  @media (max-width:600px){ #dock{right:14px;bottom:14px} .dock-panel,#spEmbed,#spEmbed iframe{width:calc(100vw - 28px)} #sound .lbl small{display:none} }
 
   /* ---------- Responsive ---------- */
   @media (max-width:900px){
@@ -206,22 +228,29 @@
 </head>
 <body class="locked">
 
-<!-- Intro: the name writes itself -->
-<div id="intro" aria-hidden="true">
-  <svg class="signature" id="introSig" viewBox="0 0 600 230" role="img" aria-label="PsychoYP">
-    <defs><clipPath id="introClip"><rect class="wipe" x="-120" y="-40" width="840" height="330"/></clipPath></defs>
-    <g clip-path="url(#introClip)"><text x="300" y="170" text-anchor="middle">PsychoYP</text></g>
-  </svg>
-  <button id="skip" type="button">Skip</button>
+<!-- Intro: the name writes itself, then the visitor enters -->
+<div id="intro">
+  <div class="intro-inner">
+    <svg class="signature" id="introSig" viewBox="0 0 600 230" aria-hidden="true">
+      <defs><clipPath id="introClip"><rect class="wipe" x="-120" y="-40" width="840" height="330"/></clipPath></defs>
+      <g clip-path="url(#introClip)"><text x="300" y="170" text-anchor="middle">PsychoYP</text></g>
+    </svg>
+    <h1 class="sr-only">PsychoYP</h1>
+    <div class="enter-wrap" id="enterWrap">
+      <button id="enter" type="button"><span>Enter</span><i aria-hidden="true">&#9834;</i></button>
+      <button id="enterQuiet" type="button">Enter without sound</button>
+    </div>
+  </div>
 </div>
 
-
-<!-- Background audio -->
-<audio id="bgm" src="assets/audio/plus-234-daily-paper.mp3" preload="auto" loop playsinline></audio>
-<button id="sound" type="button" aria-pressed="false" aria-label="Turn sound on">
-  <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-  <span class="lbl"><span class="state">Sound off</span><small>+234 (Daily Paper)</small></span>
-</button>
+<!-- Sound: +234 (Daily Paper), streamed from Spotify -->
+<div id="dock" aria-label="Now playing">
+  <div class="dock-panel" id="dockPanel"><div id="spEmbed"></div></div>
+  <button id="sound" type="button" aria-pressed="false" aria-label="Turn sound on">
+    <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    <span class="lbl"><span class="state">Sound off</span><small>+234 (Daily Paper)</small></span>
+  </button>
+</div>
 
 <main>
   <!-- Hero -->
@@ -315,82 +344,76 @@ const SPOTIFY_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="cur
 
 /* ---------- Intro ---------- */
 const intro = document.getElementById('intro');
+const enterWrap = document.getElementById('enterWrap');
 let introDone = false;
-function endIntro(){
+function endIntro(withSound){
   if(introDone) return; introDone = true;
+  // Runs inside the click: that click is what lets the browser play sound.
+  if(withSound) Sound.start(); else Sound.setMuted(true);
   intro.classList.add('out');
   document.body.classList.remove('locked');
   setTimeout(()=>document.getElementById('hero').classList.add('ready'), 350);
-  setTimeout(()=>armAudio(), 350);
+  setTimeout(()=>Sound.showDock(), 900);
   setTimeout(()=>intro.remove(), 1300);
 }
-document.getElementById('skip').addEventListener('click', endIntro);
+document.getElementById('enter').addEventListener('click', ()=>endIntro(true));
+document.getElementById('enterQuiet').addEventListener('click', ()=>endIntro(false));
+let enterShown = false;
+function showEnter(){
+  if(enterShown) return; enterShown = true;
+  enterWrap.classList.add('show');
+}
+// Pressing Enter on the keyboard also enters (with sound).
+addEventListener('keydown', e=>{ if(enterShown && !introDone && e.key === 'Enter' && !e.target.closest('button')) endIntro(true); });
 (document.fonts ? document.fonts.ready : Promise.resolve()).then(()=>{
-  if(reduce){ document.getElementById('introSig').classList.add('write'); setTimeout(endIntro, 600); return; }
+  if(reduce){ document.getElementById('introSig').classList.add('write'); setTimeout(showEnter, 300); return; }
   requestAnimationFrame(()=>document.getElementById('introSig').classList.add('write'));
-  setTimeout(endIntro, 3300);
+  setTimeout(showEnter, 2500);
 });
-setTimeout(endIntro, 6000); // safety net if fonts never resolve
+setTimeout(showEnter, 5000); // safety net if fonts never resolve
 
 
-/* ---------- Background audio: +234 (Daily Paper) ---------- */
-const bgm = document.getElementById('bgm');
-const soundBtn = document.getElementById('sound');
-const TARGET_VOL = 0.55;
-let audioOK = true;          // false if the file is missing/unplayable
-let userMuted = false;       // visitor chose "off"
-try { userMuted = localStorage.getItem('yp-sound') === 'off'; } catch(e){}
-let fadeRAF = null;
-function fadeTo(v, ms, done){
-  cancelAnimationFrame(fadeRAF);
-  const from = bgm.volume, t0 = performance.now();
-  const step = t => { const k = Math.min(1,(t-t0)/ms); bgm.volume = from + (v-from)*k; if(k<1) fadeRAF = requestAnimationFrame(step); else if(done) done(); };
-  fadeRAF = requestAnimationFrame(step);
-}
-function setUI(on){
-  soundBtn.classList.toggle('on', on);
-  soundBtn.setAttribute('aria-pressed', on);
-  soundBtn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
-  soundBtn.querySelector('.state').textContent = on ? 'Sound on' : 'Sound off';
-}
-function startAudio(){
-  if(!audioOK || userMuted) return Promise.resolve(false);
-  bgm.volume = 0;
-  return bgm.play().then(()=>{ fadeTo(TARGET_VOL, 1800); setUI(true); return true; })
-                   .catch(()=>{ setUI(false); return false; });
-}
-function stopAudio(){ fadeTo(0, 500, ()=>bgm.pause()); setUI(false); }
-soundBtn.addEventListener('click', e=>{
-  e.stopPropagation();
-  if(bgm.paused){ userMuted = false; startAudio(); }
-  else { userMuted = true; stopAudio(); }
-  try { localStorage.setItem('yp-sound', userMuted ? 'off' : 'on'); } catch(e){}
-});
-function noAudio(){ audioOK = false; soundBtn.remove(); }
-bgm.addEventListener('error', noAudio);
-if(bgm.error || bgm.networkState === 3) noAudio(); // failed before this script ran
-// Called when the landing page appears: try to play straight away; if the browser
-// blocks autoplay, start on the visitor's first click / tap / key press instead.
-function armAudio(){
-  if(bgm.error || bgm.networkState === 3) noAudio();
-  if(!audioOK) return;
-  soundBtn.classList.add('show');
-  startAudio().then(ok=>{
-    if(ok || userMuted) return;
-    const kick = e=>{
-      if(e.target.closest && e.target.closest('#sound')) return; // the button handles itself
-      ['pointerdown','keydown','touchend'].forEach(t=>removeEventListener(t, kick, true));
-      startAudio();
-    };
-    ['pointerdown','keydown','touchend'].forEach(t=>addEventListener(t, kick, true));
-  });
-}
-// Pause when the tab is hidden, resume when back
-let resumeOnShow = false;
-document.addEventListener('visibilitychange', ()=>{
-  if(document.hidden){ resumeOnShow = !bgm.paused; if(resumeOnShow) bgm.pause(); }
-  else if(resumeOnShow && !userMuted){ bgm.play().catch(()=>{}); }
-});
+/* ---------- Sound: +234 (Daily Paper) via Spotify's Embed iFrame API ---------- */
+const SOUND_TRACK = 'spotify:track:7654xYO8k7W7K5V5TpAksU'; // +234 (Daily Paper), Euphoria (2021)
+const Sound = (()=>{
+  const dock = document.getElementById('dock'), btn = document.getElementById('sound');
+  let ctrl = null, wantPlay = false, playing = false, nearEnd = false, collapseT = null;
+  function ui(on){
+    playing = on;
+    btn.classList.toggle('on', on);
+    btn.setAttribute('aria-pressed', on);
+    btn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+    btn.querySelector('.state').textContent = on ? 'Sound on' : 'Sound off';
+  }
+  function peek(ms){ dock.classList.add('open'); clearTimeout(collapseT); collapseT = setTimeout(()=>dock.classList.remove('open'), ms || 4500); }
+  function start(){ wantPlay = true; if(ctrl) ctrl.play(); }
+  function stop(){ wantPlay = false; if(ctrl) ctrl.pause(); ui(false); }
+  // Load Spotify's player now so it is ready by the time the visitor clicks Enter.
+  window.onSpotifyIframeApiReady = api => {
+    api.createController(document.getElementById('spEmbed'), { uri: SOUND_TRACK, width: '100%', height: 80 }, c => {
+      ctrl = c;
+      c.addListener('ready', ()=>{ if(wantPlay) c.play(); });
+      c.addListener('playback_update', e => {
+        const d = e.data || {};
+        if(!d.isBuffering) ui(!d.isPaused);
+        // Loop: when the track ends, start it again unless the visitor turned sound off.
+        if(d.duration && d.position >= d.duration - 600) nearEnd = true;
+        if(nearEnd && d.isPaused && wantPlay){ nearEnd = false; c.seek(0); c.play(); }
+      });
+    });
+  };
+  const sdk = document.createElement('script');
+  sdk.src = 'https://open.spotify.com/embed/iframe-api/v1'; sdk.async = true;
+  document.head.appendChild(sdk);
+  btn.addEventListener('click', ()=>{ if(playing || wantPlay){ stop(); } else { start(); peek(); } });
+  btn.addEventListener('mouseenter', ()=>{ dock.classList.add('open'); clearTimeout(collapseT); });
+  dock.addEventListener('mouseleave', ()=>{ clearTimeout(collapseT); collapseT = setTimeout(()=>dock.classList.remove('open'), 700); });
+  return {
+    start, stop,
+    setMuted(v){ if(v) stop(); },
+    showDock(){ dock.classList.add('show'); if(wantPlay) peek(5000); },
+  };
+})();
 
 /* ---------- Hero stage scaling ---------- */
 const stage = document.getElementById('stage');
@@ -526,7 +549,7 @@ VIDEOS.forEach(v=>{
   const card = wrap.querySelector('.vcard');
   card.addEventListener('click', ()=>{
     if(card.querySelector('iframe')) return;
-    if(!bgm.paused){ userMuted = true; stopAudio(); }
+    Sound.stop();
     const f = document.createElement('iframe');
     f.src = `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0&modestbranding=1`;
     f.title = v.title; f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'; f.allowFullscreen = true;
